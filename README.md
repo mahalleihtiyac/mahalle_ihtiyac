@@ -308,11 +308,11 @@ Bu proje, 3 kişilik bir takım tarafından geliştirilmiştir:
 
 ### 🧑‍💻 Takım Üyesi 1
 - **İsim**: [Esma Zeynep Uysal]
-- **GitHub**: [@kullaniciadi1](https://github.com/Esmazuysal)
+- **GitHub**: [@Esmazuysal](https://github.com/Esmazuysal)
 
 ### 🧑‍💻 Takım Üyesi 2
 - **İsim**: [Sudenaz Kobilay]
-- **GitHub**: [@kullaniciadi2](https://github.com/Sudekobilay)
+- **GitHub**: [@Sudekobilay](https://github.com/Sudekobilay)
 
 ### 🧑‍💻 Takım Üyesi 3
 - **İsim**: [Hilal Nur Turan]
