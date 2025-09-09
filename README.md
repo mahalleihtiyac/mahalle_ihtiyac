@@ -75,7 +75,7 @@ Bu proje, takım çalışması ve işbirliğinin önemini vurgulayan bir öğren
 #### 1. Projeyi İndirin
 ```bash
 # GitHub'dan klonlayın
-git clone https://github.com/mahalleihtiyac/mahalle_ihtiyac.git
+git clone https://github.com/capraz/mahalle_ihtiyac.git
 cd mahalle_ihtiyac
 
 # Veya ZIP dosyası olarak indirip açın
