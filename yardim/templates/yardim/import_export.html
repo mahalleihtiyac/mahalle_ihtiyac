@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Veri Aktarımı{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+.veri-aktar-container {
+  max-width: 600px;
+  margin: 50px auto;
+  background-color: #fff9ec;
+  border: 10px solid #d2b48c;
+  border-radius: 25px;
+  padding: 40px 30px;
+  font-family: 'Patrick Hand', cursive;
+  text-align: center;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.07);
+}
+
+.veri-aktar-container h2 {
+  font-size: 28px;
+  color: #4e342e;
+  margin-bottom: 30px;
+}
+
+.veri-aktar-container h3 {
+  font-size: 22px;
+  color: #5d4037;
+  margin-bottom: 15px;
+}
+
+.veri-aktar-container a,
+.veri-aktar-container button {
+  background-color: #81c784;
+  color: white;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: 'Patrick Hand', cursive;
+  transition: background 0.2s ease;
+}
+
+.veri-aktar-container a:hover,
+.veri-aktar-container button:hover {
+  background-color: #66bb6a;
+}
+
+.veri-aktar-container input[type="file"] {
+  margin-bottom: 16px;
+  font-size: 16px;
+  font-family: 'Patrick Hand', cursive;
+}
+</style>
+
+<div class="veri-aktar-container">
+  <h2>Veri Aktarımı</h2>
+
+  <div style="margin-bottom: 40px;">
+    <h3>Dışa Aktar</h3>
+    <a href="{% url 'export_help_requests_csv' %}">Tüm İlanları CSV Olarak İndir</a>
+  </div>
+
+  <div>
+    <h3>İçe Aktar</h3>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="file" name="csv_file" required>
+      <br>
+      <button type="submit">CSV Dosyasını Yükle</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

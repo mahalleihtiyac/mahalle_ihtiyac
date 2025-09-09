@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block title %}İlan Detayı{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+  .detail-pano {
+    max-width: 700px;
+    margin: 40px auto;
+    background-color: #fef3e7;
+    border: 10px solid #d2b48c;
+    border-radius: 25px;
+    padding: 35px;
+    font-family: 'Patrick Hand', cursive;
+    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.08);
+    color: #4e342e;
+  }
+
+  .detail-pano h2 {
+    text-align: center;
+    color: #5d4037;
+    font-size: 28px;
+    margin-bottom: 25px;
+  }
+
+  .detail-pano p {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .acil-etiket {
+    color: red;
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 10px;
+  }
+
+  .duzenle-btn, .sil-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 18px;
+    text-decoration: none;
+    font-family: 'Patrick Hand', cursive;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+
+  .duzenle-btn {
+    background-color: #81c784;
+    color: white;
+    margin-right: 10px;
+    border: none;
+  }
+
+  .duzenle-btn:hover {
+    background-color: #66bb6a;
+  }
+
+  .sil-btn {
+    background-color: #e57373;
+    color: white;
+    border: none;
+  }
+
+  .sil-btn:hover {
+    background-color: #d32f2f;
+  }
+
+  .mesaj-form {
+    margin-top: 30px;
+  }
+
+  .mesaj-form textarea {
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 16px;
+    font-family: 'Patrick Hand', cursive;
+    border: 1px solid #ccc;
+  }
+
+  .mesaj-form button {
+    margin-top: 10px;
+    background-color: #81c784;
+    color: white;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    font-family: 'Patrick Hand', cursive;
+  }
+
+  .mesaj-form button:hover {
+    background-color: #66bb6a;
+  }
+
+  .giris-uyari {
+    margin-top: 30px;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .giris-uyari a {
+    color: #81c784;
+    text-decoration: underline;
+  }
+</style>
+
+<div class="detail-pano">
+  <h2>{{ help_request.title }}</h2>
+
+  <p><strong>Kategori:</strong> {{ help_request.category.name }}</p>
+  <p><strong>Açıklama:</strong> {{ help_request.description }}</p>
+  <p><strong>Yardım Tarihi:</strong> {{ help_request.help_date|date:"d M Y, H:i" }}</p>
+  <p><strong>Oluşturan:</strong> {{ help_request.user.username }}</p>
+
+  {% if help_request.is_urgent %}
+    <p class="acil-etiket">⚠️ Acil Yardım!</p>
+  {% endif %}
+
+  {% if user.is_authenticated %}
+    {% if help_request.user == user %}
+      <a href="{% url 'update_help_request' help_request.id %}" class="duzenle-btn">İlanı Düzenle</a>
+      <form action="{% url 'delete_help_request' help_request.id %}" method="post" style="display:inline;" onsubmit="return confirm('Emin misiniz? Bu ilan silinecek!');">
+        {% csrf_token %}
+        <button type="submit" class="sil-btn">İlanı Sil</button>
+      </form>
+    {% else %}
+      <div class="mesaj-form">
+        <h4>Yardım Teklifi Gönder</h4>
+        <form action="{% url 'volunteer_for_request' help_request.id %}" method="post">
+          {% csrf_token %}
+          <textarea name="message" rows="4" placeholder="Mesajınızı yazın..." required></textarea>
+          <button type="submit">Yardım Et</button>
+        </form>
+      </div>
+    {% endif %}
+  {% else %}
+    <p class="giris-uyari">
+      Yardım teklifi göndermek için <a href="{% url 'login' %}">giriş yapın</a>.
+    </p>
+  {% endif %}
+</div>
+{% endblock %}

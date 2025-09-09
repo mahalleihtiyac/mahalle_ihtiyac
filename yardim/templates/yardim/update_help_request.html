@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+.update-help-request-container {
+  max-width: 600px;
+  margin: 40px auto 0 auto;
+  background: #fffdf5;
+  border: 3px dashed #d7ccc8;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  padding: 32px 28px;
+  font-family: 'Patrick Hand', cursive;
+}
+
+.update-help-request-container h2 {
+  text-align: center;
+  color: #6d4c41;
+  margin-bottom: 24px;
+}
+
+.update-help-request-container label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  display: block;
+  color: #4b3b2d;
+}
+
+.update-help-request-container input[type="text"],
+.update-help-request-container input[type="date"],
+.update-help-request-container textarea,
+.update-help-request-container select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 16px;
+  margin-bottom: 16px;
+  background: #fff;
+}
+
+.update-help-request-container textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.update-help-request-container input[type="checkbox"] {
+  transform: scale(1.3);
+  margin-right: 10px;
+}
+
+.update-help-request-container .form-check-label {
+  display: inline-block;
+  color: #4b3b2d;
+}
+
+.update-help-request-container .btn-submit {
+  background: #81c784;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  transition: background 0.2s;
+}
+
+.update-help-request-container .btn-submit:hover {
+  background: #66bb6a;
+}
+
+.alert {
+  background-color: #ffccbc;
+  border: 1px solid #e57373;
+  padding: 10px;
+  border-radius: 8px;
+  color: #5d4037;
+  margin-bottom: 20px;
+  text-align: center;
+}
+</style>
+
+<div class="update-help-request-container">
+  <h2>İlanı Güncelle</h2>
+  <form method="post">
+    {% csrf_token %}
+    {% if form.errors %}
+      <div class="alert">
+        Lütfen hataları düzeltin.
+      </div>
+    {% endif %}
+
+    <label for="title">Başlık</label>
+    <input type="text" name="title" id="title" value="{{ help_request.title }}" required>
+
+    <label for="category">Kategori</label>
+    <select name="category" id="category" required>
+      {% for category in categories %}
+        <option value="{{ category.id }}" {% if help_request.category_id == category.id %} selected {% endif %}>{{ category.name }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="description">Açıklama</label>
+    <textarea name="description" id="description" required>{{ help_request.description }}</textarea>
+
+    <label for="help_date">Yardım Tarihi</label>
+    <input type="date" name="help_date" id="help_date" value="{{ help_request.help_date|date:'Y-m-d' }}" required>
+
+    <label for="is_urgent">
+      <input type="checkbox" name="is_urgent" id="is_urgent" {% if help_request.is_urgent %} checked {% endif %}>
+      Acil
+    </label>
+
+    <button type="submit" class="btn-submit">İlanı Güncelle</button>
+  </form>
+</div>
+{% endblock %}

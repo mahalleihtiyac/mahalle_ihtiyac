@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+.search-results-container {
+  max-width: 800px;
+  margin: 40px auto;
+  font-family: 'Patrick Hand', cursive;
+}
+
+.search-title {
+  text-align: center;
+  color: #6d4c41;
+  font-size: 28px;
+  margin-bottom: 24px;
+}
+
+.note-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.note-card {
+  background-color: #fffbe7;
+  border: 4px dashed #d2b48c;
+  border-radius: 16px;
+  padding: 20px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  color: #4b3b2d;
+  text-decoration: none;
+}
+
+.note-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 2px 4px 10px rgba(0,0,0,0.1);
+}
+
+.note-card strong {
+  font-size: 20px;
+  color: #5d4037;
+}
+
+.note-card small {
+  color: #999;
+  display: block;
+  margin-top: 8px;
+  font-size: 0.9em;
+}
+
+.pagination {
+  text-align: center;
+  margin-top: 30px;
+  font-family: 'Patrick Hand', cursive;
+  color: #4e342e;
+}
+
+.pagination a {
+  margin: 0 8px;
+  color: #4e342e;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.pagination .current {
+  margin: 0 12px;
+}
+</style>
+
+<div class="search-results-container">
+  <h2 class="search-title">🔍 Arama Sonuçları</h2>
+
+  {% include 'yardim/search.html' %}
+
+  {% if help_requests %}
+    <div class="note-grid">
+      {% for help_request in help_requests %}
+        <a href="{% url 'help_request_detail' help_request.id %}" class="note-card">
+          <strong>{{ help_request.title }}</strong>
+          <div>{{ help_request.description|truncatechars:100 }}</div>
+          <small>{{ help_request.created_at|date:"d M Y, H:i" }}</small>
+        </a>
+      {% endfor %}
+    </div>
+
+    <div class="pagination">
+      <span class="step-links">
+        {% if help_requests.has_previous %}
+          <a href="?page=1">&laquo; İlk</a>
+          <a href="?page={{ help_requests.previous_page_number }}">Önceki</a>
+        {% endif %}
+
+        <span class="current">
+          Sayfa {{ help_requests.number }} / {{ help_requests.paginator.num_pages }}
+        </span>
+
+        {% if help_requests.has_next %}
+          <a href="?page={{ help_requests.next_page_number }}">Sonraki</a>
+          <a href="?page={{ help_requests.paginator.num_pages }}">Son</a>
+        {% endif %}
+      </span>
+    </div>
+  {% else %}
+    <p style="text-align:center; font-size:18px; color:#6d4c41;">Aradığınız kriterlere uygun ilan bulunamadı 🕵️‍♀️</p>
+  {% endif %}
+</div>
+{% endblock %}

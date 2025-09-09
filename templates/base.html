@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html>
+<head>
+    <title>{% block title %}Mahalle Yardım Ağı{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        :root {
+            --zeytin: #8d6e63;
+            --krem:rgb(250, 236, 197);
+            --yesil: #81c784;
+            --yesil-hover: #66bb6a;
+            --pembe:rgb(245, 203, 203);
+            --sari:rgb(228, 223, 171);
+            --mavi:rgb(204, 217, 239);
+            --yesilimsi:rgb(221, 243, 197);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f1ea;
+            color: #444;
+        }
+
+        .navbar {
+            background: #ecd3a1 ;
+            padding: 16px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+            border-bottom: 4px dashed #d7ccc8;
+        }
+
+        .navbar .container {
+           
+            width: 90%;
+            max-width: 1700px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .navbar h1 {
+            color:rgb(92, 70, 51);
+            margin: 0;
+            font-size: 2.9rem;
+            animation: slideIn 1s ease-out;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .navbar .menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .navbar .menu a,
+        .navbar .menu form button {
+            font-size: 0.95rem;
+            padding: 12px 16px;
+            border-radius: 15px;
+            background-color: var(--mavi);
+            border: none;
+            color: #3e3e3e;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .navbar .menu a:nth-child(1) { background-color: var(--pembe); }
+        .navbar .menu a:nth-child(2) { background-color: var(--sari); }
+        .navbar .menu a:nth-child(3) { background-color: var(--yesilimsi); }
+        .navbar .menu a:nth-child(4) { background-color: var(--mavi); }
+        .navbar .menu a:nth-child(5) { background-color: var(--pembe); }
+
+        .navbar .menu form button {
+            background-color: var(--yesil);
+            color: white;
+        }
+
+        .navbar .menu a:hover,
+        .navbar .menu form button:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+            text-decoration: none;
+        }
+
+        .container {
+            background:rgb(250, 243, 225);;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 30px;
+            width: 90%;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        ul.messages {
+            list-style-type: none;
+            padding: 0;
+            margin: 10px 0 20px 0;
+        }
+
+        ul.messages li {
+            background-color: var(--yesilimsi);
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+            margin-bottom: 5px;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .gunun-sozu {
+            text-align: center;
+            margin-top: 10px;
+            font-style: italic;
+            color: #6d4c41;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .navbar .container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .navbar .menu {
+                margin-top: 12px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .navbar h1 {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="container">
+        
+                 <h1>Mahalle Yardım Ağı</h1>
+            
+            <div class="menu">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'help_request_list' %}">İlanlar</a>
+                    <a href="{% url 'create_help_request' %}">İlan Oluştur</a>
+                    <a href="{% url 'view_profile' %}">Profilim</a>
+                    <a href="{% url 'received_offers' %}">Yardım Teklifleri</a>
+                    <a href="{% url 'inbox' %}">Mesajlar</a>
+                    {% if user.is_staff %}
+                        <a href="{% url 'import_export' %}">Veri Aktarımı</a>
+                    {% endif %}
+                    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Çıkış Yap</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">Giriş Yap</a>
+                    <a href="{% url 'register' %}">Kayıt Ol</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ✅ Günün Sözü -->
+        <div class="gunun-sozu">"Komşu komşunun külüne muhtaçtır."</div>
+    </div>
+
+    {% if messages %}
+    <div class="container">
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+    
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
+

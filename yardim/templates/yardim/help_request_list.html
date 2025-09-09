@@ -1,0 +1,646 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+ body {
+  background-color: #f3efe2;
+}
+
+/* Eklenen bölümler için kutu stilleri */
+.mahalle-bolum {
+  max-width: 1300px;
+  margin: 30px auto 0 auto;
+  border-radius: 18px;
+  padding: 22px 28px;
+  font-family: 'Patrick Hand', cursive;
+  box-shadow: 4px 4px 15px rgba(0,0,0,0.07);
+}
+.mahalle-guncelleme { background:#fffbe7; border-left:8px solid #fbc02d; margin-bottom:18px; }
+.mahalle-paylasim { background:#e8f5e9; border-left:8px solid rgb(245, 235, 191); margin-bottom:18px; }
+.mahalle-hava { background:#e3f2fd; border-left:8px solid rgb(213, 246, 240); margin-bottom:18px; }
+
+.pano-container {
+  background-color: #fdf3e4; /* Dış pano arka planı: açık bej */
+  border: 12px solid #c89b63; /* Düz, açık kahverengi kenarlık */
+  border-radius: 30px;
+  padding: 40px 30px;
+  max-width: 1300px;
+  margin: 40px auto;
+  box-shadow: 10px 10px 30px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.pano-header {
+  font-size: 36px;
+  font-weight: bold;
+  color: #4b3b2d;
+  text-align: center;
+  margin-bottom: 50px;
+  font-family: 'Patrick Hand', cursive;
+  position: relative;
+}
+
+.note-grid {
+  background-color: #ecd3a1; /* İç pano alanı */
+  padding: 40px;
+  border-radius: 20px;
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 40px !important;
+  justify-items: center !important;
+}
+
+.note {
+  background-color: #fff6cc;
+  border: 2px solid #d0b85f;
+  width: 200px;
+  height: 220px;
+  padding: 15px 15px 20px;
+  border-radius: 15px;
+  box-shadow: 4px 4px 12px rgba(0,0,0,0.08);
+  position: relative;
+  font-family: 'Patrick Hand', cursive;
+  transition: all 0.3s ease-in-out;
+}
+
+.note:hover {
+  transform: scale(1.05);
+  box-shadow: 6px 6px 20px rgba(0,0,0,0.15);
+}
+
+.note-1 {
+  background-color: #fff6cc;
+  border-color: #d0b85f;
+}
+.note-2 {
+  background-color: #d7f9f1;
+  border-color: #89c3a4;
+}
+.note-3 {
+  background-color: #ffe0e0;
+  border-color: #d9a2a2;
+}
+.note-4 {
+  background-color: #e0ebf8;
+  border-color: #a0badd;
+}
+
+.note::before {
+  content: "";
+  width: 25px;
+  height: 10px;
+  background-color: #fce4a2;
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-10deg);
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+  border-radius: 2px;
+}
+
+.note::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  background-color: #c1443c;
+  border-radius: 50%;
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+.note-header {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #5a3e2b;
+}
+
+.note img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  margin-right: 8px;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+
+.note-content {
+  font-size: 15px;
+  color: #333;
+  flex-grow: 1;
+}
+
+.note-content strong {
+  font-size: 16px;
+  color: #4b3b2d;
+}
+
+.note-footer {
+  font-size: 12px;
+  color: #777;
+  margin-top: 10px;
+  text-align: right;
+}
+
+.pagination {
+  display: inline-block;
+  margin-top: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.pagination a {
+  color: #4b3b2d;
+  padding: 8px 16px;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  margin: 0 4px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.pagination a:hover {
+  background-color: #f0f0f0;
+}
+
+.pagination span {
+  padding: 8px 16px;
+  margin: 0 4px;
+  color: #4b3b2d;
+  border-radius: 4px;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.search-bar input[type="text"],
+.search-bar select {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 2px solid #d0a678;
+  font-size: 15px;
+  background-color: #fffef7;
+  font-family: 'Comic Neue', cursive;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar select {
+  min-width: 150px;
+}
+
+.search-bar button {
+  background-color: #d0a678;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: 'Comic Neue', cursive;
+  transition: background-color 0.3s ease;
+}
+
+.search-bar button:hover {
+  background-color: #b98c5a;
+}
+
+.mahalle-gunlugu {
+  background: #fff9e6;
+  border: 3px solid #d0a678;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 30px auto;
+  max-width: 1300px;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.08);
+  font-family: 'Comic Neue', cursive;
+  position: relative;
+}
+
+.mahalle-gunlugu h2 {
+  margin-top: 0;
+  text-align: center;
+  font-size: 1.8em;
+  color: #5e4b2b;
+  text-shadow: 1px 1px #fdf1c8;
+}
+
+/* 🗳️ Duygu Anketi */
+.duygu-anketi {
+  background: #fff8dc;
+  border: 2px dashed #c8a95a;
+  padding: 12px;
+  margin-bottom: 18px;
+  text-align: center;
+  border-radius: 12px;
+}
+
+.duygu-anketi p {
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #5e4b2b;
+}
+
+.duygu-anketi label {
+  font-size: 1.5em;
+  margin: 0 8px;
+  cursor: pointer;
+}
+
+.duygu-anketi button {
+  margin-left: 12px;
+  background-color:rgb(165, 221, 211);
+  color: #4e342e;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.duygu-anketi button:hover {
+  background-color:rgb(203, 155, 180);
+}
+
+/* 📰 Günlük Kartı */
+.gunluk-kaydi {
+  background-color: #fffef8;
+  border-left: 6px solid rgb(250, 224, 159);
+  padding: 12px 16px 32px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: inset 0 0 3px #e2d4a3;
+  position: relative;
+  clip-path: polygon(0 0, 100% 0, 100% 94%, 95% 100%, 90% 94%, 85% 100%, 80% 94%, 75% 100%, 70% 94%, 65% 100%, 0 94%);
+  animation: basimEfekti 0.5s ease;
+  transition: transform 0.2s;
+}
+
+.gunluk-kaydi:hover {
+  transform: scale(1.01);
+}
+
+.etiket {
+  background-color: #ffd180;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  color: #4e342e;
+  font-size: 0.95em;
+}
+
+.gunluk-kaydi p {
+  margin: 6px 0;
+  font-size: 1em;
+  color: #333;
+}
+
+.tarih {
+  font-size: 0.8em;
+  color: #a1887f;
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+}
+
+.bos-gunluk {
+  text-align: center;
+  font-style: italic;
+  color: #888;
+}
+
+.gunluk-formu {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.gunluk-formu input[type="text"] {
+  padding: 10px 16px;
+  border: 2px solid #e0c97f;
+  border-radius: 10px;
+  width: 70%;
+  background-color: #fffef8;
+}
+
+.gunluk-formu button {
+  background: rgb(211, 154, 185);
+  color: #4e342e;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.gunluk-formu button:hover {
+  background: rgb(213, 146, 192);
+}
+
+/* 📰 Gazete Basımı Animasyonu */
+@keyframes basimEfekti {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+/* Paylaşmak Güzeldir kartı */
+
+.paylasim-karti {
+  background: #fff7ec;
+  border: 3px dashed #f8bbd0;
+  border-radius: 16px;
+  padding: 30px;
+  margin: 40px auto;
+  width: 92%;
+  max-width: 1300px;
+  box-shadow: 4px 6px 14px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Başlık kısmı */
+.paylasim-baslik {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.paylasim-baslik h2 {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 28px;
+  color: #6d4c41;
+  background-color: rgb(247, 243, 209);
+  padding: 10px 20px;
+  border-radius: 10px;
+  display: inline-block;
+  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Liste stili */
+.paylasim-liste {
+  list-style-type: "🎁 ";
+  padding-left: 25px;
+  margin: 0 0 20px 0;
+}
+
+.paylasim-liste li {
+  margin-bottom: 12px;
+  font-size: 16px;
+  color: #4e342e;
+}
+
+/* Kullanıcı adı ve tarih */
+.paylasim-kullanici {
+  font-weight: bold;
+  color: #5d4037;
+}
+
+.paylasim-tarih {
+  color: #388e3c;
+  font-size: 0.85em;
+  margin-left: 8px;
+}
+
+/* Boş paylaşım metni */
+.bos-paylasim {
+  font-style: italic;
+  color: #a1887f;
+  font-size: 15px;
+}
+
+/* Form stili */
+.paylasim-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.paylasim-input {
+  flex-grow: 1;
+  padding: 12px 16px;
+  border: 2px solid #ffe0b2;
+  border-radius: 10px;
+  background-color: #fffde7;
+  font-size: 15px;
+  width: 70%;
+  box-shadow: inset 1px 1px 4px rgba(0,0,0,0.05);
+}
+
+.paylasim-buton {
+  background: #aed581;
+  color: #263238;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.1);
+}
+
+.paylasim-buton:hover {
+  background: #c5e1a5;
+}
+
+/* Küçük ekranlar */
+@media (max-width: 800px) {
+  .paylasim-form {
+    flex-direction: column;
+  }
+
+  .paylasim-input, .paylasim-buton {
+    width: 100%;
+  }
+}
+
+
+/* Hava Durumu ve Hatırlatma kartı */
+.hava-hatirlatma-karti {
+  background: #fff9e6;
+  border: 3px dotted rgb(201, 193, 154);
+  border-radius: 14px;
+  padding: 22px;
+  margin: 30px auto;
+  width: 90%;
+  max-width: 1350px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Başlık */
+.hava-hatirlatma-baslik h2 {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 24px;
+  color: #0d47a1;
+  margin: 0 0 15px 0;
+  text-align: center;
+  background-color: #bbdefb;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+/* İçerik metni */
+.hava-hatirlatma-icerik p {
+  font-size: 15.5px;
+  margin: 8px 0;
+  color: #37474f;
+}
+
+.hava-hatirlatma-icerik strong {
+  color: #1565c0;
+}
+
+</style>
+
+
+
+<div class="pano-container">
+  <div class="pano-header">🧷 Mahalle İlan Panosu</div>
+  
+  <form method="get" action="{% url 'search_help_requests' %}" class="search-bar">
+  <input type="text" name="title" placeholder="İlanlarda ara..." value="{{ request.GET.title }}">
+  
+  <select name="category">
+    <option value="">Kategori</option>
+    {% for category in categories %}
+      <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
+    {% endfor %}
+  </select>
+  
+  <button type="submit">Ara</button>
+</form>
+
+
+  <div class="note-grid">
+    {% for ilan in help_requests %}
+      <a href="{% url 'help_request_detail' ilan.id %}" style="text-decoration:none; color:inherit;">
+        <div class="note note-{{ forloop.counter }}">
+          <div class="note-header">
+            {% if ilan.user.profile.profile_picture %}
+              <img src="{{ ilan.user.profile.profile_picture.url }}" alt="Profil Fotoğrafı">
+            {% else %}
+              <img src="https://via.placeholder.com/40" alt="Profil Fotoğrafı">
+            {% endif %}
+            {{ ilan.user.username }}
+          </div>
+          <div class="note-content">
+            <strong>{{ ilan.title }}</strong><br>
+            {{ ilan.description|truncatechars:90 }}
+          </div>
+          <div class="note-footer">
+            {{ ilan.created_at|date:"d M Y, H:i" }}
+          </div>
+        </div>
+      </a>
+    {% empty %}
+      <p>Henüz ilan yok.</p>
+    {% endfor %}
+  </div>
+  <div style="text-align:center; margin-top:30px;">
+    <div class="pagination">
+      {% if help_requests.has_previous %}
+        <a href="?page={{ help_requests.previous_page_number }}">&laquo; Önceki</a>
+      {% endif %}
+      <span>Sayfa {{ help_requests.number }} / {{ help_requests.paginator.num_pages }}</span>
+      {% if help_requests.has_next %}
+        <a href="?page={{ help_requests.next_page_number }}">Sonraki &raquo;</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!--1-Mahallede noldu-->
+
+<div class="mahalle-gunlugu">
+  <h2>🗞️ Bugün Mahallede Ne Oldu?</h2>
+
+  <!-- 🗳️ Bugünün Duygusu Anketi -->
+  <div class="duygu-anketi">
+    <p>Bugün mahalle nasıldı?</p>
+    <form method="post">
+      {% csrf_token %}
+      <label><input type="radio" name="duygu" value="mutlu"> 😊</label>
+      <label><input type="radio" name="duygu" value="normal"> 😐</label>
+      <label><input type="radio" name="duygu" value="uzgun"> 😞</label>
+      <button type="submit" name="duygu_gonder">Oyla</button>
+    </form>
+  </div>
+
+  <!-- Günlük Mesajları -->
+  <div class="gunluk-listesi">
+    {% for guncelleme in mahalle_guncellemeleri %}
+      <div class="gunluk-kaydi yeni-mesaj">
+        <span class="etiket">{{ guncelleme.user.get_full_name|default:guncelleme.user.username }}</span>
+        <p>{{ guncelleme.mesaj }}</p>
+        <span class="tarih">{{ guncelleme.tarih|date:"d.m.Y" }}</span>
+      </div>
+    {% empty %}
+      <p class="bos-gunluk">Henüz bir güncelleme yok. İlk mesajı sen bırak!</p>
+    {% endfor %}
+  </div>
+
+  <!-- Mesaj Gönderme Formu -->
+  <form method="post" class="gunluk-formu">
+    {% csrf_token %}
+    <input type="text" name="guncelleme_mesaj" placeholder="Bugün ne oldu?.." />
+    <button type="submit" name="guncelleme_gonder">✏️ Paylaş</button>
+  </form>
+</div>
+
+<!-- 2. Paylaşmak Güzeldir -->
+<div class="paylasim-karti">
+  <div class="paylasim-baslik">
+    <h2>Paylaşmak Güzeldir</h2>
+  </div>
+  <ul class="paylasim-liste">
+    {% for esya in paylasilan_esyalar %}
+      <li>
+        <span class="paylasim-kullanici">{{ esya.user.get_full_name|default:esya.user.username }}</span>:
+        {{ esya.aciklama }}
+        <span class="paylasim-tarih">({{ esya.tarih|date:"d.m.Y" }})</span>
+      </li>
+    {% empty %}
+      <li class="bos-paylasim">Henüz paylaşılmış eşya yok. İlk paylaşımı sen yap!</li>
+    {% endfor %}
+  </ul>
+  <form method="post" class="paylasim-form">
+    {% csrf_token %}
+    <input type="text" name="esya_aciklama" class="paylasim-input" placeholder="Paylaşmak istediğin eşyayı yaz...">
+    <button type="submit" name="esya_gonder" class="paylasim-buton">📦 Paylaş</button>
+  </form>
+</div>
+
+
+<!-- 3. Hava Durumu + Mahalle Hatırlatmaları  -->
+<div class="hava-hatirlatma-karti">
+  <div class="hava-hatirlatma-baslik">
+    <h2>Hava Durumu & Mahalle Hatırlatmaları</h2>
+  </div>
+  <div class="hava-hatirlatma-icerik">
+    <p><strong>Hava Durumu:</strong> <span id="hava-durumu">{{ hava_durumu|default:"Veri yok" }}</span></p>
+    <p><strong>Hatırlatma:</strong> <span id="mahalle-hatirlatma">{{ mahalle_hatirlatma|default:"Bugün için özel bir hatırlatma yok." }}</span></p>
+  </div>
+</div>
+
+
+
+{% endblock %}

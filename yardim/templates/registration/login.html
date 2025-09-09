@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}Giriş Yap{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+  .login-board {
+    max-width: 420px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fef9e7;
+    border: 4px solid #a1887f;
+    border-radius: 16px;
+    box-shadow: 4px 4px 8px rgba(0,0,0,0.1);
+    font-family: 'Patrick Hand', cursive;
+    position: relative;
+  }
+
+  .login-board h2 {
+    text-align: center;
+    color: #6d4c41;
+    margin-bottom: 20px;
+    font-size: 28px;
+  }
+
+  .login-board form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .login-board input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid #d7ccc8;
+    font-size: 16px;
+    font-family: 'Patrick Hand', cursive;
+  }
+
+  .login-board button {
+    background-color: #81c784;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+  }
+
+  .login-board button:hover {
+    background-color: #66bb6a;
+  }
+
+  .login-board .register-link {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 16px;
+    color: #555;
+  }
+
+  .login-board .register-link a {
+    color: #81c784;
+    text-decoration: none;
+  }
+
+  .login-board .register-link a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="login-board">
+  <h2>Giriş Yap</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Giriş Yap</button>
+  </form>
+
+  <p class="register-link">
+    Hesabın yok mu? <a href="{% url 'register' %}">Kayıt Ol</a>
+  </p>
+</div>
+{% endblock %}

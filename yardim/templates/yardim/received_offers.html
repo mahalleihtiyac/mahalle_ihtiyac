@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Gelen Yardım Teklifleri{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+.received-offers-container {
+  max-width: 700px;
+  margin: 50px auto;
+  font-family: 'Patrick Hand', cursive;
+}
+
+.received-offers-title {
+  text-align: center;
+  color: #5d4037;
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+
+.offer-card {
+  background: #fffbe7;
+  padding: 20px;
+  border-radius: 16px;
+  border: 4px dashed #d2b48c;
+  margin-bottom: 20px;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.04);
+}
+
+.offer-card b {
+  color: #4e342e;
+}
+
+.offer-card small {
+  color: #888;
+  font-size: 0.9em;
+}
+
+.offer-actions {
+  margin-top: 12px;
+}
+
+.offer-actions button {
+  font-family: 'Patrick Hand', cursive;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.btn-message {
+  background-color: #81c784;
+  color: white;
+}
+
+.btn-message:hover {
+  background-color: #66bb6a;
+}
+
+.btn-accept {
+  background-color: #64b5f6;
+  color: white;
+}
+
+.btn-accept:hover {
+  background-color: #42a5f5;
+}
+</style>
+
+<div class="received-offers-container">
+  <h2 class="received-offers-title">🤝 Gelen Yardım Teklifleri</h2>
+
+  {% if received_offers %}
+    {% for offer in received_offers %}
+      <div class="offer-card">
+        <p><b>Gönderen:</b> {{ offer.sender.username }}</p>
+        <p><b>İlan Başlığı:</b> {{ offer.title }}</p>
+        <p><b>Mesaj:</b> {{ offer.message }}</p>
+        <small>{{ offer.created_at|date:"d M Y, H:i" }}</small>
+        <div class="offer-actions">
+          <form action="{% url 'send_message' %}" method="get" style="display:inline;">
+            <input type="hidden" name="receiver" value="{{ offer.sender.id }}">
+            <button type="submit" class="btn-message">✉️ Mesaj Gönder</button>
+          </form>
+          <form action="{% url 'send_message' %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="receiver" value="{{ offer.sender.id }}">
+            <input type="hidden" name="content" value="Yardım teklifiniz kabul edildi!">
+            <button type="submit" class="btn-accept">✅ Kabul Et</button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p style="text-align:center; font-size:18px; color:#6d4c41;">Henüz hiçbir ilanınıza yardım teklifi gelmedi 📨</p>
+  {% endif %}
+</div>
+{% endblock %}

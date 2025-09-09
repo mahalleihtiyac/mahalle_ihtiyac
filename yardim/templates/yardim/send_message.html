@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+.message-form-container {
+  max-width: 500px;
+  margin: 40px auto 0 auto;
+  background: #fffdf5;
+  border: 3px dashed #d7ccc8;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  padding: 32px 28px;
+  font-family: 'Patrick Hand', cursive;
+}
+
+.message-form-container h2 {
+  text-align: center;
+  color: #6d4c41;
+  margin-bottom: 24px;
+}
+
+.message-form-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.message-form-container textarea,
+.message-form-container input,
+.message-form-container select {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #bbb;
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.message-form-container button {
+  background: #81c784;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.message-form-container button:hover {
+  background: #66bb6a;
+}
+
+.message-form-container .back-link {
+  text-align: center;
+  margin-top: 18px;
+}
+
+.message-form-container .back-link a {
+  color: #81c784;
+  text-decoration: none;
+  font-size: 1rem;
+}
+</style>
+
+<div class="message-form-container">
+  <h2>Yeni Mesaj Gönder</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Gönder</button>
+  </form>
+  <div class="back-link">
+    <a href="{% url 'inbox' %}">← Gelen Kutusuna Dön</a>
+  </div>
+</div>
+{% endblock %}

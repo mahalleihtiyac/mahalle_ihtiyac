@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block title %}Profili Düzenle{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+  .profile-container {
+    background-color: #f8f1df;
+    border: 10px solid #d4b183;
+    border-radius: 25px;
+    padding: 40px;
+    max-width: 600px;
+    margin: 40px auto;
+    font-family: 'Patrick Hand', cursive;
+    box-shadow: 6px 6px 20px rgba(0,0,0,0.1);
+  }
+
+  .profile-container h2 {
+    text-align: center;
+    color: #5c4033;
+    margin-bottom: 30px;
+  }
+
+  .profile-photo-preview {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: #ddd;
+    object-fit: cover;
+    margin: auto;
+    display: block;
+    border: 3px solid #ccc;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #4b3b2d;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 8px 12px;
+    font-family: 'Patrick Hand', cursive;
+    border: 2px solid #c6a972;
+    border-radius: 8px;
+    background-color: #fffdf7;
+  }
+
+  .profile-actions {
+    text-align: center;
+    margin-top: 30px;
+  }
+
+  .profile-actions button {
+    background-color: #81c784;
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-right: 10px;
+  }
+
+  .profile-actions a {
+    color: #6d4c41;
+    text-decoration: underline;
+    font-size: 16px;
+  }
+
+  .error-message {
+    color: #c1443c;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+</style>
+
+<div class="profile-container">
+  <h2>Profili Düzenle</h2>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% if form.errors %}
+      <div class="error-message">Lütfen hataları düzeltin.</div>
+    {% endif %}
+
+    <div style="text-align: center; margin-bottom: 20px;">
+      {% if profile.profile_picture %}
+        <img src="{{ profile.profile_picture.url }}" alt="Profil Fotoğrafı" class="profile-photo-preview">
+      {% else %}
+        <div class="profile-photo-preview"></div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      {{ form.profile_picture.label_tag }}
+      {{ form.profile_picture }}
+    </div>
+
+    <div class="form-group">
+      {{ form.role.label_tag }}
+      {{ form.role }}
+    </div>
+
+    <div class="form-group">
+      {{ form.bio.label_tag }}
+      {{ form.bio }}
+    </div>
+
+    <div class="form-group">
+      {{ form.phone_number.label_tag }}
+      {{ form.phone_number }}
+    </div>
+
+    <div class="form-group">
+      {{ form.location.label_tag }}
+      {{ form.location }}
+    </div>
+
+    <div class="profile-actions">
+      <button type="submit">Profili Kaydet</button>
+      <a href="{% url 'view_profile' %}">İptal</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

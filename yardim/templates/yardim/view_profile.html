@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block title %}Profiliniz{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+  .profile-view-container {
+    background-color: #f8f1df;
+    border: 10px solid #d4b183;
+    border-radius: 25px;
+    padding: 40px;
+    max-width: 800px;
+    margin: 40px auto;
+    font-family: 'Patrick Hand', cursive;
+    box-shadow: 6px 6px 20px rgba(0,0,0,0.1);
+  }
+
+  .profile-view-container h2 {
+    text-align: center;
+    color: #5c4033;
+    margin-bottom: 30px;
+  }
+
+  .profile-box {
+    background-color: #fffef9;
+    border-radius: 16px;
+    box-shadow: 4px 4px 12px rgba(0,0,0,0.05);
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #d3c4a4;
+  }
+
+  .profile-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #e0d4bd;
+    color: #8a7f6f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border: 3px solid #d3c4a4;
+  }
+
+  .profile-info p {
+    font-size: 18px;
+    color: #4b3b2d;
+    margin: 10px 0;
+  }
+
+  .profile-info strong {
+    font-weight: bold;
+    color: #3e2e20;
+  }
+
+  .profile-actions {
+    text-align: center;
+    margin-top: 25px;
+  }
+
+  .profile-actions a {
+    background-color: #81c784;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 18px;
+  }
+
+  .profile-actions a:hover {
+    background-color: #6fbf73;
+  }
+
+  .delete-profile-btn {
+    background-color: #e57373 !important;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 18px;
+    margin-left: 15px;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: 'Patrick Hand', cursive;
+  }
+  .delete-profile-btn:hover {
+    background-color: #d32f2f !important;
+  }
+</style>
+
+<div class="profile-view-container">
+  <h2>Profil Bilgilerim</h2>
+
+  <div class="profile-box">
+    <div>
+      {% if profile.profile_picture %}
+        <img src="{{ profile.profile_picture.url }}" alt="Profil Resmi" class="profile-image">
+      {% else %}
+        <div class="profile-placeholder">Fotoğraf Yok</div>
+      {% endif %}
+    </div>
+
+    <div class="profile-info">
+      <p><strong>Kullanıcı Adı:</strong> {{ profile.user.username }}</p>
+      <p><strong>Rol:</strong> {{ profile.get_role_display }}</p>
+      <p><strong>Biyografi:</strong> {% if profile.bio %}{{ profile.bio }}{% else %}<em>Belirtilmemiş</em>{% endif %}</p>
+      <p><strong>Telefon Numarası:</strong> {% if profile.phone_number %}{{ profile.phone_number }}{% else %}<em>Belirtilmemiş</em>{% endif %}</p>
+      <p><strong>Konum:</strong> {% if profile.location %}{{ profile.location }}{% else %}<em>Belirtilmemiş</em>{% endif %}</p>
+    </div>
+  </div>
+
+  <div class="profile-actions">
+    <a href="{% url 'edit_profile' %}">Profili Düzenle</a>
+    <form action="{% url 'delete_profile' %}" method="post" style="display:inline;">
+      {% csrf_token %}
+      <button type="submit" class="delete-profile-btn" onclick="return confirm('Profilinizi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.');">
+        Profili Sil
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

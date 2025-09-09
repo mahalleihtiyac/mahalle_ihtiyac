@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Gelen Mesajlar{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+.inbox-container {
+  max-width: 700px;
+  margin: 50px auto;
+  font-family: 'Patrick Hand', cursive;
+}
+
+.inbox-title {
+  text-align: center;
+  color: #5d4037;
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+
+.message-card {
+  background: #fff8dc;
+  padding: 20px;
+  border-radius: 16px;
+  border: 4px dashed #d2b48c;
+  margin-bottom: 20px;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.04);
+}
+
+.message-card b {
+  color: #4e342e;
+}
+
+.message-card small {
+  color: #888;
+  font-size: 0.9em;
+}
+
+.reply-btn {
+  background-color: #81c784;
+  color: white;
+  padding: 6px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+  font-family: 'Patrick Hand', cursive;
+}
+
+.reply-btn:hover {
+  background-color: #66bb6a;
+}
+</style>
+
+<div class="inbox-container">
+  <h2 class="inbox-title">📩 Gelen Mesajlar</h2>
+
+  {% if messages_in %}
+    {% for msg in messages_in %}
+      <div class="message-card">
+        <p><b>Kimden:</b> {{ msg.sender.username }}</p>
+        <p><b>Mesaj:</b> {{ msg.content }}</p>
+        <small>{{ msg.created_at|date:"d M Y, H:i" }}</small>
+        <form action="{% url 'send_message' %}" method="get">
+          <input type="hidden" name="receiver" value="{{ msg.sender.id }}">
+          <button type="submit" class="reply-btn">✏️ Cevap Ver</button>
+        </form>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p style="text-align:center; font-size:18px; color:#6d4c41;">Henüz mesajınız yok 📨</p>
+  {% endif %}
+</div>
+{% endblock %}
